@@ -72,6 +72,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                 }
                 else {
                     let refreshAction = UIAlertAction(title: "Try again", style: .Cancel) { (action) in
+                       refreshControl.endRefreshing()
                        self.viewDidLoad()                   }
                     // add the OK action to the alert controller
                     alertController.addAction(refreshAction)
@@ -211,7 +212,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                     
                     self.presentViewController(alertController, animated: true) {
                     
-                       
+                       refreshControl.endRefreshing()
                         
                     }
                     
