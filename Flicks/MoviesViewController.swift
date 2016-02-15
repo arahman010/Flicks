@@ -30,8 +30,6 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         tableView.insertSubview(refreshControl, atIndex: 0)
         
         
-        
-        let alertController = UIAlertController(title: "No Internet Connection", message: "Please connect to a wifi/data connection to view contents", preferredStyle: .Alert)
 
         
         
@@ -68,24 +66,10 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                             
                             self.movies = (responseDictionary["results"] as! [NSDictionary])
                             self.tableView.reloadData()
+                            refreshControl.endRefreshing()
                     }
                 }
-                else {
-                    let refreshAction = UIAlertAction(title: "Try again", style: .Cancel) { (action) in
-                       refreshControl.endRefreshing()
-                       self.viewDidLoad()                   }
-                    // add the OK action to the alert controller
-                    alertController.addAction(refreshAction)
-                    
-                    self.presentViewController(alertController, animated: true) {
-                        refreshControl.endRefreshing()
-                        
-                    }
-                    
-                    
-                    
-                    
-                }
+                
             }
         
         )
@@ -163,7 +147,6 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         //for alert controller
         
         
-        let alertController = UIAlertController(title: "No Internet Connection", message: "Please connect to a wifi/data connection to view contents", preferredStyle: .Alert)
         
 
         
@@ -188,7 +171,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                     completionHandler: { (dataOrNil, response, error) in
                         
             
-                if let data = dataOrNil {
+                        if let data = dataOrNil {
                     if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
                         data, options:[]) as? NSDictionary {
                         print("response: \(responseDictionary)")
@@ -202,24 +185,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                             }
                         }
                         
-                else {
-                    let refreshAction = UIAlertAction(title: "Try again", style: .Cancel) { (action) in
-                        refreshControl.endRefreshing()
-                        self.viewDidLoad()                   }
-                    
-                    // add the refresh action to the alert controller
-                    alertController.addAction(refreshAction)
-                    
-                    self.presentViewController(alertController, animated: true) {
-                    
-                       refreshControl.endRefreshing()
-                        
-                    }
-                    
-                    
-                    
-                    
-                        }
+                
                     
                     }
                     
@@ -231,14 +197,22 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     
     
 
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        let cell = sender as! UITableViewCell
+        let indexPath = tableView.indexPathForCell(cell)
+        let movie = movies![indexPath!.row]
+        
+        let detailViewController = segue.destinationViewController as! DetailViewController
+        detailViewController.movie = movie
+        
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
     }
-    */
+    
 
 }
