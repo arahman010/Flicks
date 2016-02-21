@@ -118,20 +118,67 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         let overview = movie["overview"] as! String
         
         if let posterPath = movie["poster_path"] as? String {
+        
+        //
+        let smallBaseUrl = "https://image.tmdb.org/t/p/w45"
+        let largeBaseUrl = "https://image.tmdb.org/t/p/original"
+        
+        let smallImageUrl = NSURL(string: smallBaseUrl + posterPath)
+        let largeImageUrl = NSURL(string: largeBaseUrl + posterPath)
             
+        let smallImageRequest = NSURLRequest(URL: smallImageUrl!)
+        let largeImageRequest = NSURLRequest(URL: largeImageUrl!)
+            
+        cell.posterView.setImageWithURLRequest(
+            smallImageRequest,
+            placeholderImage: nil,
+            success: { (smallImageRequest, smallImageResponse, smallImage) -> Void in
+                
+                // smallImageResponse will be nil if the smallImage is already available
+                // in cache (might want to do something smarter in that case).
+                cell.posterView.alpha = 0.0
+                cell.posterView.image = smallImage;
+                
+                UIView.animateWithDuration(0.3, animations: { () -> Void in
+                    
+                    cell.posterView.alpha = 1.0
+                    
+                    }, completion: { (sucess) -> Void in
+                        
+                        // The AFNetworking ImageView Category only allows one request to be sent at a time
+                        // per ImageView. This code must be in the completion block.
+                        cell.posterView.setImageWithURLRequest(
+                            largeImageRequest,
+                            placeholderImage: smallImage,
+                            success: { (largeImageRequest, largeImageResponse, largeImage) -> Void in
+                                
+                                cell.posterView.image = largeImage;
+                                
+                            },
+                            failure: { (request, response, error) -> Void in
+                                // do something for the failure condition of the large image request
+                                // possibly setting the ImageView's image to a default image
+                            })
+                })
+            },
+            failure: { (request, response, error) -> Void in
+                // do something for the failure condition
+                // possibly try to get the large image
+        })
         
-        let baseUrl = "http://image.tmdb.org/t/p/w500"
         
-        let imageUrl = NSURL(string: baseUrl + posterPath)
-        
-        
+
+            
+        //
+       
+        /*
         cell.posterView.setImageWithURL(imageUrl!)
         }
         else {
             cell.posterView.image = nil
         }
         
-        
+        */
         
         cell.titleLabel.text = title
         cell.overviewLabel.text = overview
@@ -141,19 +188,18 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         backgroundView.backgroundColor = UIColor.lightGrayColor()
         cell.selectedBackgroundView = backgroundView
         
-        
+        }
         
         return cell
+    
+    
+    
     }
-    
-    
-    
     // refresh function
     
     func refreshControlAction(refreshControl: UIRefreshControl) {
         
         
-        //for alert controller
         
         
         
@@ -225,3 +271,4 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     
 
 }
+

@@ -36,6 +36,8 @@ class DetailViewController: UIViewController {
         overviewLabel.text = overview
         
         overviewLabel.sizeToFit()
+        titleLabel.sizeToFit()
+       
         
         if let posterPath = movie["poster_path"] as? String {
             
