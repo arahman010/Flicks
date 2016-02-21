@@ -111,6 +111,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         
     }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
         let cell = tableView.dequeueReusableCellWithIdentifier("MovieCell", forIndexPath: indexPath) as! MovieCell
         let movie = movies![indexPath.row]
         let title = movie["title"] as! String
@@ -135,6 +136,12 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         cell.titleLabel.text = title
         cell.overviewLabel.text = overview
         print("row \(indexPath.row)")
+        // Setting Cell selected color
+        let backgroundView = UIView()
+        backgroundView.backgroundColor = UIColor.lightGrayColor()
+        cell.selectedBackgroundView = backgroundView
+        
+        
         
         return cell
     }
